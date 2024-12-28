@@ -112,16 +112,17 @@ export const AddPaymentInfoModal: React.FC<PropsWithChildren<any>> = (props) => 
             })
 
             if(!res.ok) {
-
+                throw res
             }
-            props.setOpen(false)
+            setOpen(false)
             setSelectedBank('')
             setBankAccountName(''),
             setBankAccountNumber('')
-            toast.success('Organization')
+            toast.success('Bank account added')
             await mutate('/api/fleet/member/populated')
         } catch (error) {
-            toast.error('Failed to create driver!')
+            console.log(error)
+            toast.error('Failed to add bank account')
         } finally {
             setIsLoading(false)
         }
