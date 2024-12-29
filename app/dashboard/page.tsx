@@ -10,7 +10,7 @@ import {Select, SelectTrigger, SelectItem, SelectValue, SelectGroup, SelectConte
 import {useEffect, useState} from "react";
 import {useDelivery} from "@/contexts/deliveries-context";
 
-export enum DeliveryTypes  {
+ enum DeliveryTypes  {
     'FOOD' = 'FOOD',
     'GROCERIES'  = 'GROCERIES',
     'PARCEL' = 'PARCEL',

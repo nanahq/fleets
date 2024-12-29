@@ -7,7 +7,7 @@ import {toast} from "sonner";
 import {FleetMemberI, FleetOrganizationI} from '@nanahq/sticky'
 import {Icons} from "@/components/commons/icons";
 import {useProfile} from "@/contexts/profile-context";
-export const TeamAdminManagement: React.FC<{isAdmin: boolean, member: FleetMemberI}> = ({team, member}) => {
+export const TeamAdminManagement: React.FC<{isAdmin: boolean, member: FleetMemberI }> = ({ member}) => {
     const [open, setOpen] = useState(false)
     const [removing, setRemoving] = useState(false)
     const [loading, setLoading] = useState(false)

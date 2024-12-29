@@ -31,7 +31,7 @@ const fetcher: Fetcher<any, string>  = (url: string) =>
 
 
 export function DriversProvider(
-    props: PropsWithChildren<{fallbackDrivers: any[], fallbackOrganization: any[]}>
+    props: PropsWithChildren<{fallbackDrivers: any[]}>
 ): JSX.Element | null {
     const [selectedDriver, setSelectedDriver] = useState<any>(null)
     const [hasExistingDriverSelected, setHasExistingDriverSelected] = useState(false)

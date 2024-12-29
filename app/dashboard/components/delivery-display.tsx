@@ -17,7 +17,7 @@ export const DeliveryDisplay: React.FC<{selectedDelivery: DeliveryI}> = (props) 
     const [driver, setDriver] = useState<DriverI | null>(null)
 
     const driversInDelivery  = useMemo(() => {
-        const pool = props.selectedDelivery?.pool as string[] ?? []
+        const pool = props.selectedDelivery?.pool as unknown as string[] ?? []
         return drivers.filter(driver => pool?.includes(driver._id) && driver.available)
     }, [props.selectedDelivery, drivers])
 

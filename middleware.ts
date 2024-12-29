@@ -9,7 +9,7 @@ const parseCookie = (req: NextRequest, cookieName: string): string | null => {
     return cookie?.value || null;
 };
 
-const authMiddleware: NextMiddleware = async (req: NextRequest): Promise<NextResponse> => {
+const authMiddleware: any = async (req: NextRequest): Promise<NextResponse> => {
     try {
         const headers = new Headers(req.headers);
         const sessionToken = parseCookie(req, 'Authentication');
@@ -22,7 +22,7 @@ const authMiddleware: NextMiddleware = async (req: NextRequest): Promise<NextRes
         }
     } catch (error) {
         console.error('Error in cookie-based authentication:', error);
-        return NextResponse.error();
+        return NextResponse.error() as any;
     }
 };
 

@@ -56,7 +56,7 @@ export const metadata: Metadata = {
 //     }
 // }
 
-const DashboardLayout: NextPage = async ({ children }) => {
+const DashboardLayout: NextPage<any> = async ({ children }) => {
     // const ssrData = await getInitialData()
     // const  fallback = {
     //     '/api/team/get-team': ssrData?.team ?? undefined,

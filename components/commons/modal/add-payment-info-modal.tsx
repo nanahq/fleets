@@ -76,7 +76,7 @@ export const AddPaymentInfoModal: React.FC<PropsWithChildren<any>> = (props) => 
             }
 
             const data = await res.json()
-            const formattedBanks = data?.data.banks?.filter(bank => supportedBanksArray.includes(bank.bankCode)).map((bank: any) => ({value: bank.bankCode, label: bank.bankName}))
+            const formattedBanks = data?.data.banks?.filter((bank: any) => supportedBanksArray.includes(bank.bankCode)).map((bank: any) => ({value: bank.bankCode, label: bank.bankName}))
 
             setBanks(formattedBanks)
 

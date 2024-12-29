@@ -37,7 +37,7 @@ export default function RegisterPage() {
         }
     ];
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (e: any): Promise<void> => {
         e.preventDefault()
         const form = new FormData(e.target)
 

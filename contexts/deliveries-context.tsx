@@ -33,7 +33,7 @@ const fetcher: Fetcher<any, string>  = (url: string) =>
 
 
 export function DeliveriesProvider(
-    props: PropsWithChildren<{fallbackDeliveries: any[], fallbackOrganization: any[]}>
+    props: PropsWithChildren<{fallbackDeliveries: any[]}>
 ): JSX.Element | null {
     const [selectedDelivery, setSelectedDelivery] = useState<any>(null)
     const [hasExistingDeliverySelected, setHasExistingDeliverySelected] = useState(false)

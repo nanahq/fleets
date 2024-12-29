@@ -14,7 +14,7 @@ import {DriverList} from "@/app/dashboard/components/driver-list";
 import {useDrivers} from "@/contexts/drivers-context";
 import {DriverDisplay} from "@/app/dashboard/components/driver-display";
 
-export enum DeliveryTypes  {
+ enum DeliveryTypes  {
     'FOOD' = 'FOOD',
     'GROCERIES'  = 'GROCERIES',
     'PARCEL' = 'PARCEL',

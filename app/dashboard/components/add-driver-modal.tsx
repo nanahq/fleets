@@ -156,9 +156,7 @@ export const AddDriverModal: React.FC<PropsWithChildren<{open: boolean, setOpen:
                             </Label>
                             <Select
                                 name="state"
-                                id="state"
                                 required={true}
-
                             >
                                 <SelectTrigger className="">
                                     <SelectValue placeholder="Select State" />

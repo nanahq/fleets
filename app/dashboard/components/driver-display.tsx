@@ -28,7 +28,7 @@ export const DriverDisplay: React.FC<{
                             <div className="flex items-center justify-start space-x-4">
                                 <Avatar>
                                     <AvatarFallback className="border-primary border-[0.5px] bg-transparent">
-                                        {getInitials(`${selectedDriver?.firstName} ${selectedDriver?.lastName}` ?? "Contact Name")}
+                                        {getInitials(`${selectedDriver?.firstName} ${selectedDriver?.lastName}`)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
@@ -47,7 +47,7 @@ export const DriverDisplay: React.FC<{
                                     <DropdownMenuItem>
                                         Edit contact
                                     </DropdownMenuItem>
-                                    <DeleteDriverButton client={selectedDriver} open={deleteDriverModalOpen} setOpen={setDeleteDriverModalOpen} />
+                                    <DeleteDriverButton driver={selectedDriver} open={deleteDriverModalOpen} setOpen={setDeleteDriverModalOpen} />
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
@@ -99,7 +99,7 @@ export const DriverDisplay: React.FC<{
                                             <Button
                                                 variant="link"
                                                 className="h-auto p-0 text-base text-muted-foreground hover:underline"
-                                                onClick={() => setEditClientModal(true)}
+                                                onClick={() => setDeleteDriverModalOpen(true)}
                                             >
                                                 Add email
                                             </Button>
@@ -121,7 +121,7 @@ export const DriverDisplay: React.FC<{
                                             <Button
                                                 variant="link"
                                                 className="h-auto p-0 text-base text-muted-foreground hover:underline"
-                                                onClick={() => setEditClientModal(true)}
+                                                onClick={() => setDeleteDriverModalOpen(true)}
                                             >
                                                 Add phone number
                                             </Button>

@@ -30,7 +30,7 @@ export default function LoginPage() {
             description: "Track your riders location and performance metrics and optimize your operations"
         }
     ];
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (e: any): Promise<void> => {
         e.preventDefault()
         const form = new FormData(e.target)
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
             toast.success('Login success!')
             router.push('/dashboard')
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.message ?? 'Failed to login into account')
         } finally {
             setSubmitting(false)
