@@ -116,7 +116,7 @@ export const AddPaymentInfoModal: React.FC<PropsWithChildren<any>> = (props) => 
             }
             setOpen(false)
             setSelectedBank('')
-            setBankAccountName(''),
+            setBankAccountName('')
             setBankAccountNumber('')
             toast.success('Bank account added')
             await mutate('/api/fleet/member/populated')

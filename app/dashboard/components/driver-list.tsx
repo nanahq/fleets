@@ -21,7 +21,7 @@ export function DriverList({
         <ScrollArea className="h-screen pb-40">
             <div className="flex flex-col gap-2 p-4 ">
                 {sortedItems.map((item) => {
-                    let IconComponent = <User className="h-5 w-5" />
+                    const IconComponent = <User className="h-5 w-5" />
 
                     return (
                         <button

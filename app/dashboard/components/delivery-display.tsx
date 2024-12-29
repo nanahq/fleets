@@ -35,7 +35,7 @@ export const DeliveryDisplay: React.FC<{selectedDelivery: DeliveryI}> = (props) 
                        <CardContent>
                            <div className="flex flex-row flex-wrap space-x-5">
                                {driversInDelivery.map(driver => (
-                                   <DropdownMenu>
+                                   <DropdownMenu key={driver._id}>
                                        <DropdownMenuTrigger asChild>
                                            <div key={driver._id} className="flex cursor-pointer flex-row items-center space-x-2">
                                                <Avatar>
