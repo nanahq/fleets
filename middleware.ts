@@ -33,7 +33,7 @@ const authMiddleware = async (req: NextRequest): Promise<NextResponse> => {
         }
     } catch (error) {
         console.error('Error in cookie-based authentication:', error);
-        return NextResponse.error();
+        return NextResponse.error() as any;
     }
 };
 
