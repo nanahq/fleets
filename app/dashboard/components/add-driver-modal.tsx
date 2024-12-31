@@ -40,7 +40,7 @@ export const AddDriverModal: React.FC<PropsWithChildren<{open: boolean, setOpen:
             props.setOpen(false)
             toast.success('Driver created!')
             await mutate('/api/fleet/member/drivers')
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.message ?? 'Failed to created a driver. Something went wrong')
 
         } finally {

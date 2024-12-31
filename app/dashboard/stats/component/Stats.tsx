@@ -70,7 +70,6 @@ export const Stats: React.FC<{ data: FleetOrgStat }> = (props) => {
                             <CardContent>
                                 <div className="text-2xl font-bold">
                                     <UnitSuffix
-                                        suffix="KM"
                                         noSuffixSpacing={true}
                                         value={
                                           props.data.totalDistance
@@ -97,7 +96,6 @@ export const Stats: React.FC<{ data: FleetOrgStat }> = (props) => {
                         <CardContent>
                             <div className="text-2xl font-bold">
                                 <UnitSuffix
-                                    suffix="Minutes"
                                     noSuffixSpacing={true}
                                     value={
                                         props.data.totalTimeSpent
@@ -151,7 +149,6 @@ export const Stats: React.FC<{ data: FleetOrgStat }> = (props) => {
                         <CardContent>
                             <div className="text-2xl font-bold">
                                 <UnitSuffix
-                                    suffix="Minutes"
                                     noSuffixSpacing={true}
                                     value={
                                         props.data.averageDeliveryTime
@@ -178,7 +175,6 @@ export const Stats: React.FC<{ data: FleetOrgStat }> = (props) => {
                         <CardContent>
                             <div className="text-2xl font-bold">
                                 <UnitSuffix
-                                    suffix="Minutes"
                                     noSuffixSpacing={true}
                                     value={
                                         props.data.averageDeliveryDistance

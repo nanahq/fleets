@@ -35,7 +35,7 @@ export const DriverStatModal: React.FC<PropsWithChildren<{driverId: string, driv
             if(!res.ok) {
                throw body
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.message ?? 'Failed to created a driver. Something went wrong')
         } finally {
             setIsLoading(false)
