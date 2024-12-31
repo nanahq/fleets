@@ -9,14 +9,14 @@ export default function Home() {
           <div className="relative z-10 mx-auto max-w-5xl">
             <h1 className="animate-fade-up text-4xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
               Connect and Grow Your
-              <span className="bg-gradient-to-r from-[#4F46E5] to-[#E114E5] bg-clip-text text-transparent"> Logistics Business</span>
+              <span className="bg-gradient-to-r from-[#4F46E5] to-[#469ADC] bg-clip-text text-transparent"> Logistics Business</span>
             </h1>
             <p className="mx-auto mt-6 max-w-3xl animate-fade-up text-lg text-muted-foreground/80 [--animation-delay:200ms]">
               Find delivery opportunities, manage your fleet, and scale your logistics business with our all-in-one platform. Connect with leading marketplaces and optimize your operations.
             </p>
             <div className="mt-8 flex animate-fade-up items-center justify-center gap-4 [--animation-delay:400ms]">
               <a
-                  className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                  className="inline-flex h-11 items-center justify-center rounded-md bg-nana-200 px-8 text-sm font-medium text-white transition-colors hover:bg-nana-200/90"
                   href="/create-account"
               >
                 Start Growing Today
@@ -109,7 +109,7 @@ export default function Home() {
                 ))}
               </ul>
               <a
-                  className="mt-8 block w-full rounded-md bg-primary p-2 text-center text-white transition-colors hover:bg-primary/90"
+                  className="mt-8 block w-full rounded-md bg-nana-200 p-2 text-center text-white transition-colors hover:bg-nana-200/90"
                   href="/signup"
               >
                 Start Free Trial
