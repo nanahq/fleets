@@ -44,6 +44,12 @@ export default function AccountSettings({ open, setOpen, tab }: { open: boolean;
     const [activeTab, setActiveTab] = useState(tab ?? 'Team');
     const {profile} = useProfile()
 
+
+    if(!profile?.organization) {
+        return <div>
+            <Icons.spinner />
+        </div>
+    }
     const handleCopy = async () => {
         const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite?orgId=${profile?.organization.inviteLink}`
         await navigator.clipboard.writeText(inviteLink ?? '');

@@ -12,6 +12,8 @@ import {Card, CardHeader, CardTitle} from "@/components/ui/card";
 import {Separator} from "@/components/ui/separator";
 import {NavBar} from "@/components/commons/nav";
 import {AccountSwitcher} from "@/components/commons/setting/icon";
+import {useProfile} from "@/contexts/profile-context";
+import {ApprovalOverlay} from "@/app/dashboard/components/account-approval";
 
 interface LayoutProps {
     defaultLayout: [number, number];
@@ -23,8 +25,10 @@ export function LayoutComponent({
                                     defaultCollapsed = true,
                                     children,
                                 }: PropsWithChildren<LayoutProps>) {
-    const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+    const {profile} = useProfile()
     const panelRef = useRef<any>(null);
+
+
     useEffect(() => {
         if (defaultCollapsed && panelRef.current?.collapse) {
             panelRef.current.collapse();
@@ -32,17 +36,6 @@ export function LayoutComponent({
     }, [defaultCollapsed]);
 
 
-    // if(!isInternetConnected) {
-    //     return (
-    //         <NoInternetConnection />
-    //     )
-    // }
-    //
-    // if(status === DataFetchingStatus.FETCHED && !profile?.accountApproved) {
-    //     return (
-    //         <ApprovalOverlay />
-    //     )
-    // }
 
 
     return (
@@ -58,14 +51,12 @@ export function LayoutComponent({
                         minSize={4}
                         maxSize={4}
                         className={cn(
-                            isCollapsed &&
                             "min-w-[50px] transition-all duration-300 ease-in-out"
                         )}
                     >
                         <div
                             className={cn(
-                                "flex h-[52px] items-center justify-center",
-                                isCollapsed ? "h-[52px]" : "px-2"
+                                "flex h-[52px] items-center justify-center"
                             )}
                         >
                             <AccountSwitcher isCollapsed={true} />
@@ -113,9 +104,9 @@ export function LayoutComponent({
                     </Card>
                 </div>
             </div>
-            {/*{!profile?.brokerageName && status === DataFetchingStatus.FETCHED && (*/}
-            {/*    <CompleteProfileModal />*/}
-            {/*)}*/}
+            {profile !== undefined && !profile?.organization?.accountApproved && (
+                <ApprovalOverlay />
+            )}
         </TooltipProvider>
     );
 }

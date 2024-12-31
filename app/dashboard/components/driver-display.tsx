@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, {  useState } from "react";
+import {ChartBar, ChartArea} from 'lucide-react'
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {DriverI} from "@nanahq/sticky";
@@ -11,6 +12,7 @@ import {getInitials} from "@/lib/utils";
 import {DeleteDriverButton} from "@/app/dashboard/components/delete-driver-modal";
 import {useProfile} from "@/contexts/profile-context";
 import {DriverLocationMap} from "@/app/dashboard/components/driver-location-map";
+import {DriverStatModal} from "@/app/dashboard/components/driver-stat-modal";
 
 
 
@@ -36,20 +38,33 @@ export const DriverDisplay: React.FC<{
                                         {selectedDriver?.firstName} {selectedDriver?.lastName}
                                     </p>
                                 </div>
+
                             </div>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline">
-                                        <Ellipsis className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem>
-                                        Edit contact
-                                    </DropdownMenuItem>
-                                    <DeleteDriverButton driver={selectedDriver} open={deleteDriverModalOpen} setOpen={setDeleteDriverModalOpen} />
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="flex flex-row">
+                                <div>
+                                    <DriverStatModal driverId={selectedDriver._id} driverName={selectedDriver.firstName}>
+                                        <Button variant="ghost">
+                                            View driver performance
+                                            <ChartArea className="w-5 h-5 text-black"/>
+                                        </Button>
+                                    </DriverStatModal>
+
+                                </div>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline">
+                                            <Ellipsis className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem>
+                                            Edit contact
+                                        </DropdownMenuItem>
+                                        <DeleteDriverButton driver={selectedDriver} open={deleteDriverModalOpen} setOpen={setDeleteDriverModalOpen} />
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+
                         </div>
 
                         <div className="flex flex-col gap-3 py-5">

@@ -21,18 +21,28 @@ export const AddDriverModal: React.FC<PropsWithChildren<{open: boolean, setOpen:
 
         try{
             setIsLoading(true)
-            await fetch( '/api/fleet/owner/driver',{
+            const res = await fetch( '/api/fleet/owner/driver',{
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({...data, phone: internationalisePhoneNumber(data?.phone ?? ''), organization: profile?.organization._id, type: "DELIVER_PRE_ORDER"}),
                 method: 'POST',
             })
+
+            // if(!res.ok) {
+            //     if(res.body) {
+            //         const body = await res.json()
+            //         throw body
+            //     } else {
+            //         throw res
+            //     }
+            // }
             props.setOpen(false)
             toast.success('Driver created!')
             await mutate('/api/fleet/member/drivers')
         } catch (error) {
-            toast.error('Failed to create driver!')
+            toast.error(error?.message ?? 'Failed to created a driver. Something went wrong')
+
         } finally {
             setIsLoading(false)
         }
