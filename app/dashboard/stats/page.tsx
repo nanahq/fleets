@@ -1,10 +1,11 @@
 "use client"
 import React from "react";
+import dynamic from 'next/dynamic'
 
-import {Dashboard} from "@/app/dashboard/stats/component/Dashboard";
+const DynamicHDashboard = dynamic(() => import('./component/Dashboard'), { ssr: false, })
 const StatsPage = () => {
    return <div>
-       <Dashboard />
+       <DynamicHDashboard />
    </div>
 }
 

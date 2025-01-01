@@ -9,7 +9,7 @@ import { Icons } from "@/components/commons/icons";
 import { CalendarDateRangePicker } from "@/app/dashboard/stats/component/DateRangePicker";
 import Stats from "@/app/dashboard/stats/component/Stats";
 
-export const Dashboard = () => {
+ const Dashboard = () => {
     const [date, setDate] = useState<DateRange | undefined>({
         from: subDays(new Date(), 364),
         to: new Date(),
@@ -88,3 +88,5 @@ export const Dashboard = () => {
         </div>
     );
 };
+
+export default Dashboard
