@@ -15,8 +15,7 @@ interface CalendarDateRangePickerI {
     date: DateRange | undefined,
     setDate: any
 }
-export const CalendarDateRangePicker: React.FC<CalendarDateRangePickerI> = ({date, setDate}) => {
-
+ const CalendarDateRangePicker: React.FC<CalendarDateRangePickerI> = ({date, setDate}) => {
 
     return (
         <div className={cn("grid gap-2")}>
@@ -60,3 +59,5 @@ export const CalendarDateRangePicker: React.FC<CalendarDateRangePickerI> = ({dat
         </div>
     );
 }
+
+export default CalendarDateRangePicker

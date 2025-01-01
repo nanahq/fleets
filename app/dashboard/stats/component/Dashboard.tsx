@@ -6,8 +6,12 @@ import { subDays } from "date-fns";
 import { FleetOrgStat } from "@nanahq/sticky";
 import { useProfile } from "@/contexts/profile-context";
 import { Icons } from "@/components/commons/icons";
-import { CalendarDateRangePicker } from "@/app/dashboard/stats/component/DateRangePicker";
 import Stats from "@/app/dashboard/stats/component/Stats";
+import dynamic from "next/dynamic";
+
+
+const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr: false})
+
 
  const Dashboard = () => {
     const [date, setDate] = useState<DateRange | undefined>({
