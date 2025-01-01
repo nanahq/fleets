@@ -1,6 +1,5 @@
 "use client";
 import {NextPage} from "next";
-import {DeliveryI} from '@nanahq/sticky'
 import {cn} from "@/lib/utils";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
 import {Separator} from "@/components/ui/separator";

@@ -1,17 +1,10 @@
+"use client"
 import React from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-// import {CommissionBar} from "./CommissionBar";
-// import AssetClassPie from "./AssetClassPie";
 import { CheckIcon, DollarSign, TimerIcon, LandPlot,} from "lucide-react";
-// import CrmBar from "./CrmBar";
-// import LoanTypeRadar from "./LoanTypeRadar";
 import {Separator} from "@/components/ui/separator";
 import {UnitSuffix} from "./unit-suffix";
-// import RepDealsPie from "./RepDealsPie";
-// import RepCloseRate from "./RepCloseRate";
-// import RepCommissionBar from "./RepCommissionBar";
 import {FleetOrgStat} from "@nanahq/sticky";
-import {cn} from "@/lib/utils";
 import {DriverCommissionBar} from "@/app/dashboard/stats/component/CommissionBar";
 
 export const Stats: React.FC<{ data: FleetOrgStat }> = (props) => {

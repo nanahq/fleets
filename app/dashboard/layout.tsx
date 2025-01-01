@@ -3,7 +3,6 @@ import {LayoutComponent} from "@/components/commons/layout";
 import {DriversProvider} from "@/contexts/drivers-context";
 import {ProfileProvider} from "@/contexts/profile-context";
 
-import 'mapbox-gl/dist/mapbox-gl.css';
 import {DeliveriesProvider} from "@/contexts/deliveries-context";
 export const metadata: Metadata = {
     title: "Dashboard - Fleet",
