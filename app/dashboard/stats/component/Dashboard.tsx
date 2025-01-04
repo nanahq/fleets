@@ -6,29 +6,42 @@ import { subDays } from "date-fns";
 import { FleetOrgStat } from "@nanahq/sticky";
 import { useProfile } from "@/contexts/profile-context";
 import { Icons } from "@/components/commons/icons";
-import Stats from "@/app/dashboard/stats/component/Stats";
 import dynamic from "next/dynamic";
 
+// Dynamically import both components that might use browser APIs
+const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), {
+    ssr: false
+});
 
-const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr: false})
+const DynamicStats = dynamic(() => import('@/app/dashboard/stats/component/Stats'), {
+    ssr: false
+});
 
-
- const Dashboard = () => {
-    const [date, setDate] = useState<DateRange | undefined>({
-        from: subDays(new Date(), 364),
-        to: new Date(),
-    });
+const Dashboard = () => {
+    const [isMounted, setIsMounted] = useState(false);
+    const [date, setDate] = useState<DateRange | undefined>();
     const [data, setData] = useState<FleetOrgStat | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const { profile } = useProfile();
 
+    // Initialize date after component mounts to avoid SSR issues
+    useEffect(() => {
+        setIsMounted(true);
+        setDate({
+            from: subDays(new Date(), 364),
+            to: new Date(),
+        });
+    }, []);
+
     const fetchData = async () => {
+        if (!date?.from || !date?.to) return;
+
         try {
             setLoading(true);
             const response = await fetch(`/api/fleet/stats`, {
                 body: JSON.stringify({
-                    gte: date?.from,
-                    lte: date?.to,
+                    gte: date.from,
+                    lte: date.to,
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -36,12 +49,12 @@ const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr
                 method: "POST",
             });
 
-            const data = (await response.json()) as FleetOrgStat;
-            setData(data);
-
             if (!response.ok) {
                 throw new Error("Something went wrong");
             }
+
+            const responseData = await response.json() as FleetOrgStat;
+            setData(responseData);
         } catch (error) {
             console.error(error);
         } finally {
@@ -50,12 +63,13 @@ const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr
     };
 
     useEffect(() => {
-        if (date) {
+        if (date && isMounted) {
             void fetchData();
         }
-    }, [date]);
+    }, [date, isMounted]);
 
-    if (loading) {
+    // Show loading state before client-side hydration
+    if (!isMounted) {
         return (
             <div className="flex flex-row items-center justify-center h-screen">
                 <Icons.spinner className="h-8 w-8 animate-spin" />
@@ -63,7 +77,7 @@ const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr
         );
     }
 
-    if (!data) {
+    if (loading || !data) {
         return (
             <div className="flex flex-row items-center justify-center h-screen">
                 <Icons.spinner className="h-8 w-8 animate-spin" />
@@ -80,12 +94,12 @@ const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr
                     </h3>
                     <div className="flex flex-row items-center justify-between w-full mb-2">
                         <p className="text-lg text-muted-foreground">
-                            You have ₦{data?.totalEarnings ?? "zero"} total money generated
+                            You have ₦{data.totalEarnings ?? "zero"} total money generated
                         </p>
                         <CalendarDateRangePicker date={date} setDate={setDate} />
                     </div>
                     <div className="space-y-4 w-full">
-                        <Stats data={data as any} />
+                        <DynamicStats data={data} />
                     </div>
                 </div>
             </div>
@@ -93,4 +107,4 @@ const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr
     );
 };
 
-export default Dashboard
+export default Dashboard;
