@@ -6,7 +6,7 @@ const DynamicHDashboard = dynamic(() => import('./component/Dashboard'), { ssr: 
 const StatsPage = () => {
    return <div>
        <h1 className="sr-only">Hello world</h1>
-       <DynamicHDashboard />
+       {/*<DynamicHDashboard />*/}
    </div>
 }
 
