@@ -29,17 +29,17 @@ export const AddDriverModal: React.FC<PropsWithChildren<{open: boolean, setOpen:
                 method: 'POST',
             })
 
-            // if(!res.ok) {
-            //     if(res.body) {
-            //         const body = await res.json()
-            //         throw body
-            //     } else {
-            //         throw res
-            //     }
-            // }
+            if(!res.ok) {
+                if(res.body) {
+                    const body = await res.json()
+                    throw body
+                } else {
+                    throw res
+                }
+            }
+            await mutate('/api/fleet/member/drivers')
             props.setOpen(false)
             toast.success('Driver created!')
-            await mutate('/api/fleet/member/drivers')
         } catch (error: any) {
             toast.error(error?.message ?? 'Failed to created a driver. Something went wrong')
 
