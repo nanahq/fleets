@@ -66,9 +66,9 @@ export function LayoutComponent({
                             isCollapsed={true}
                             links={[
                                 {
-                                    title: "Stats",
+                                    title: "Metrics",
                                     icon: ChartColumnBig,
-                                    path: "/dashboard/stats",
+                                    path: "/dashboard/metrics",
                                 },
                                 {
                                     title: "Deliveries",
