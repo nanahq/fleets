@@ -8,13 +8,13 @@ import { Icons } from "@/components/commons/icons";
 import dynamic from "next/dynamic";
 
 // Dynamically import both components that might use browser APIs
-const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), {
-    ssr: false
-});
-
-const DynamicStats = dynamic(() => import('@/app/dashboard/stats/component/Stats'), {
-    ssr: false
-});
+// const CalendarDateRangePicker = dynamic(() => import('./DateRangePicker'), {
+//     ssr: false
+// });
+//
+// const DynamicStats = dynamic(() => import('@/app/dashboard/stats/component/Stats'), {
+//     ssr: false
+// });
 
 const Dashboard = () => {
     const [isMounted, setIsMounted] = useState(false);
@@ -106,7 +106,7 @@ const Dashboard = () => {
                         {/*<CalendarDateRangePicker date={date} setDate={setDate} />*/}
                     </div>
                     <div className="space-y-4 w-full">
-                        <DynamicStats data={data} />
+                        {/*<DynamicStats data={data} />*/}
                     </div>
                 </div>
             </div>
