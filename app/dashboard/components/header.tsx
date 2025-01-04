@@ -6,16 +6,16 @@ import { cn } from "@/lib/utils";
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Handle scroll animation and blur effect
-    useEffect(() => {
-        const header = document.querySelector('header');
-        if (header) {
-            setTimeout(() => {
-                header.style.transform = 'translateY(0)';
-                header.style.opacity = '1';
-            }, 600);
-        }
-    }, []);
+    // // Handle scroll animation and blur effect
+    // useEffect(() => {
+    //     const header = document.querySelector('header');
+    //     if (header) {
+    //         setTimeout(() => {
+    //             header.style.transform = 'translateY(0)';
+    //             header.style.opacity = '1';
+    //         }, 600);
+    //     }
+    // }, []);
 
     // Handle mobile menu animations
     const listItems = [
