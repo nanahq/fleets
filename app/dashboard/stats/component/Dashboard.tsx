@@ -103,7 +103,7 @@ const Dashboard = () => {
                         <p className="text-lg text-muted-foreground">
                             You have ₦{data.totalEarnings ?? "zero"} total money generated
                         </p>
-                        <CalendarDateRangePicker date={date} setDate={setDate} />
+                        {/*<CalendarDateRangePicker date={date} setDate={setDate} />*/}
                     </div>
                     <div className="space-y-4 w-full">
                         <DynamicStats data={data} />
