@@ -62,11 +62,11 @@ const Dashboard = () => {
         }
     };
 
- false   useEffect(() => {
-        if (date && isMounted) {
-            void fetchData();
-        }
-    }, [date, isMounted]);
+    // useEffect(() => {
+    //     if (date && isMounted) {
+    //         void fetchData();
+    //     }
+    // }, [date, isMounted]);
 
     if (!isMounted) {
         return (
