@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
 import { subDays } from "date-fns";
 import { FleetOrgStat } from "@nanahq/sticky";
 import { useProfile } from "@/contexts/profile-context";
@@ -19,7 +18,7 @@ const DynamicStats = dynamic(() => import('@/app/dashboard/stats/component/Stats
 
 const Dashboard = () => {
     const [isMounted, setIsMounted] = useState(false);
-    const [date, setDate] = useState<DateRange | undefined>();
+    const [date, setDate] = useState<any | undefined>();
     const [data, setData] = useState<FleetOrgStat | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const { profile } = useProfile();
@@ -28,10 +27,11 @@ const Dashboard = () => {
     useEffect(() => {
         setIsMounted(true);
         setDate({
-            from: subDays(new Date(), 364),
+            from: subDays(new Date(), 30),
             to: new Date(),
         });
     }, []);
+
 
     const fetchData = async () => {
         if (!date?.from || !date?.to) return;
@@ -68,7 +68,6 @@ const Dashboard = () => {
         }
     }, [date, isMounted]);
 
-    // Show loading state before client-side hydration
     if (!isMounted) {
         return (
             <div className="flex flex-row items-center justify-center h-screen">
@@ -83,6 +82,14 @@ const Dashboard = () => {
                 <Icons.spinner className="h-8 w-8 animate-spin" />
             </div>
         );
+    }
+
+    if(!window?.document) {
+        return (
+            <div className="flex flex-row items-center justify-center h-screen">
+                <Icons.spinner className="h-8 w-8 animate-spin"/>
+            </div>
+        )
     }
 
     return (
