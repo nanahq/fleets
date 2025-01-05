@@ -21,7 +21,6 @@ import {DriverDisplay} from "@/app/dashboard/components/driver-display";
     'ALL' = 'ALL'
 }
 const DashboardPage:NextPage = () => {
-    const [viewTypes, setViewType] = useState<DeliveryTypes>(DeliveryTypes.ALL)
     const [openModal, setOpenModal] = useState(false)
     const {drivers, selectedDriver, setSelectedDriver} = useDrivers()
 

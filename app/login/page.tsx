@@ -7,11 +7,10 @@ import { buttonVariants } from "@/components/ui/button"
 import {LoginAccountForm} from "@/app/login/component/login-account-form";
 import {useState} from "react";
 import {toast} from "sonner";
-import {router} from "next/client";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 
-import { ArrowRight, Package, Users, Activity } from 'lucide-react';
+import {  Package, Users, Activity } from 'lucide-react';
 
 
 export default function LoginPage() {
