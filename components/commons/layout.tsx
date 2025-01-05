@@ -22,18 +22,9 @@ interface LayoutProps {
 }
 
 export function LayoutComponent({
-                                    defaultCollapsed = true,
                                     children,
                                 }: PropsWithChildren<LayoutProps>) {
     const {profile} = useProfile()
-    const panelRef = useRef<any>(null);
-
-
-    useEffect(() => {
-        if (defaultCollapsed && panelRef.current?.collapse) {
-            panelRef.current.collapse();
-        }
-    }, [defaultCollapsed]);
 
 
 
