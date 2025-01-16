@@ -63,7 +63,7 @@ export function LoginAccountForm({ className, formSubmissionStatus, onSubmit, ..
                         {formSubmissionStatus && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Login
+                        Continue
                     </Button>
                 </div>
             </form>

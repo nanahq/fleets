@@ -133,7 +133,9 @@ export default function RegisterPage() {
                     </div>
                     <CreateAccountForm formSubmissionStatus={submitting} onSubmit={handleSubmit} />
                     <p data-testid="RegisterPage.Terms" className="px-8 text-center text-sm text-muted-foreground">
-                        By clicking continue, you agree to our Terms of Service and Privacy Policy.
+                        By clicking continue, you agree to our <span>
+                        <a href="/terms">Terms of Service</a>
+                    </span> and Privacy Policy.
                     </p>
                     <Link
                         data-testid="RegisterPage.LoginLink"

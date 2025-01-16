@@ -24,7 +24,7 @@ export const CalendarDateRangePicker: React.FC<CalendarDateRangePickerI> = ({dat
                 <PopoverTrigger asChild>
                     <Button
                         id="date"
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                             "justify-start text-left font-normal",
                             !date && "text-muted-foreground"
@@ -49,7 +49,6 @@ export const CalendarDateRangePicker: React.FC<CalendarDateRangePickerI> = ({dat
                     <Calendar
                         initialFocus
                         mode="range"
-
                         defaultMonth={date?.from}
                         selected={date}
                         onSelect={setDate}
