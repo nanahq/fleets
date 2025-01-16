@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {PropsWithChildren, useEffect, useRef, useState} from "react";
-import {ChartColumnBig, FlagTriangleRight, Home, LandPlot, MapPinned, Notebook, Package,} from "lucide-react";
-
+import {PropsWithChildren} from "react";
+import {ChartColumnBig, FlagTriangleRight, MapPinned, Package,} from "lucide-react";
+import dynamic from 'next/dynamic';
 import {cn} from "@/lib/utils";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup,} from "@/components/ui/resizable";
 
@@ -13,8 +13,11 @@ import {Separator} from "@/components/ui/separator";
 import {NavBar} from "@/components/commons/nav";
 import {AccountSwitcher} from "@/components/commons/setting/icon";
 import {useProfile} from "@/contexts/profile-context";
-import {ApprovalOverlay} from "@/app/dashboard/components/account-approval";
 
+
+const ApprovalOverlay = dynamic(() => import("@/app/dashboard/components/account-approval"), {
+    ssr: false,
+});
 interface LayoutProps {
     defaultLayout: [number, number];
     defaultCollapsed?: boolean;
