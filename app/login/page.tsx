@@ -121,7 +121,7 @@ export default function LoginPage() {
                         </p>
                     </div>
                     <LoginAccountForm formSubmissionStatus={submitting} onSubmit={handleSubmit} />
-                    By clicking continue, you agree to our <span>
+                    <p> By clicking continue, you agree to our <span>
                         <a href="/terms">Terms of Service</a>
                     </span> and Privacy Policy.
                 </p>
