@@ -52,7 +52,7 @@ export const DeliveryHeatmap: React.FC<DeliveryGridHeatmapProps> = ({
         <GoogleMap
             mapContainerClassName="w-full h-[100vh] rounded-lg shadow-md"
             center={mapCenter}
-            zoom={14}
+            zoom={8}
             options={{
                 disableDefaultUI: true
             }}
