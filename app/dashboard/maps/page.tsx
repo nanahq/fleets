@@ -5,18 +5,10 @@ import {useDelivery} from "@/contexts/deliveries-context";
 import {Icons} from "@/components/commons/icons";
 import { MapPin} from "lucide-react";
 
+const DeliveryMapsPage: NextPage = () => {
+    const {mapDeliveries} = useDelivery()
 
-const DeliveryMapsPage: NextPage = (props) => {
-    const {deliveries} = useDelivery()
-
-    if(!deliveries.length) {
-        return (
-            <div className="flex flex-row items-center justify-center h-screen">
-                <Icons.spinner className="h-8 w-8 animate-spin" />
-            </div>
-        )
-    }
-    if(deliveries.length < 1) {
+    if(mapDeliveries.length < 1) {
         return (
             <div className="relative w-full">
                 <div
@@ -38,7 +30,7 @@ const DeliveryMapsPage: NextPage = (props) => {
     }
 
     return (
-        <DeliveryHeatmap deliveries={deliveries} gridSize={0.4} />
+        <DeliveryHeatmap deliveries={mapDeliveries} gridSize={0.4} />
     )
 
 }

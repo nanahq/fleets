@@ -7,6 +7,7 @@ import useSWR, {Fetcher} from "swr";
 
 export interface DeliveriesProps {
     deliveries: DeliveryI[]
+    mapDeliveries: DeliveryI[]
     selectedDelivery: any
     setSelectedDelivery: (driver: any) => void
     hasExistingDeliverySelected: boolean
@@ -38,12 +39,21 @@ export function DeliveriesProvider(
     const [selectedDelivery, setSelectedDelivery] = useState<any>(null)
     const [hasExistingDeliverySelected, setHasExistingDeliverySelected] = useState(false)
     const [deliveries, setDeliveries]  = useState<DeliveryI[]>([])
+    const [mapDeliveries, setMapDeliveries]  = useState<DeliveryI[]>([])
+
     const {data: deliveriesData} = useSWR<any>('/api/fleet/member/deliveries', fetcher,  {
+        fallbackData: props.fallbackDeliveries
+    })
+
+    const {data: mapDeliveriesData} = useSWR<any>('/api/fleet/map-deliveries', fetcher,  {
         fallbackData: props.fallbackDeliveries
     })
 
 
     useEffect(() => {
+        if (Array.isArray(mapDeliveriesData)) {
+            setMapDeliveries(mapDeliveriesData as any);
+        }
         if (Array.isArray(deliveriesData)) {
             setDeliveries(deliveriesData as any);
         }
@@ -57,7 +67,7 @@ export function DeliveriesProvider(
                 setSelectedDelivery(updatedDelivery);
             }
         }
-    }, [deliveriesData, hasExistingDeliverySelected, selectedDelivery]);
+    }, [deliveriesData,mapDeliveriesData, hasExistingDeliverySelected, selectedDelivery]);
 
 
     const handleSelect = (driver: any) => {
@@ -66,7 +76,7 @@ export function DeliveriesProvider(
     }
 
     return (
-        <Deliveries.Provider value={{ deliveries, selectedDelivery, setSelectedDelivery: handleSelect, hasExistingDeliverySelected}}>
+        <Deliveries.Provider value={{ mapDeliveries, deliveries, selectedDelivery, setSelectedDelivery: handleSelect, hasExistingDeliverySelected}}>
             {props.children}
         </Deliveries.Provider>
     );
