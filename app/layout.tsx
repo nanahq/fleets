@@ -1,15 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Urbanist } from "next/font/google";
 import { Suspense } from "react";
-// import { Analytics } from "@vercel/analytics/react";
-// import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-// import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Header } from "@/app/dashboard/components/header";
-// import { Footer } from "@/components/footer";
 
 const fontSans = Urbanist({
     subsets: ["latin"],

@@ -20,6 +20,7 @@ const DashboardPage:NextPage = () => {
     const {deliveries, selectedDelivery, setSelectedDelivery, hasExistingDeliverySelected
     } = useDelivery()
 
+    console.log(deliveries)
     useEffect(() => {
         if(!selectedDelivery) {
             setSelectedDelivery(deliveries[0])
@@ -30,16 +31,16 @@ const DashboardPage:NextPage = () => {
         <>
             <ResizablePanelGroup
                 direction="horizontal"
-                className="h-screen items-stretch"
+                className="h-screen items-stretch  rounded-lg bg-white"
             >
                 <ResizablePanel
-                    defaultSize={40}
+                    defaultSize={30}
                     collapsible={false}
-                    minSize={40}
-                    maxSize={40}
+                    minSize={30}
+                    maxSize={30}
                     className={cn("transition-all duration-300 ease-in-out")}
                 >
-                    <div className="flex-col flex">
+                    <div className="flex-col  flex">
                         <div className="flex text-xs lg:text-base items-center justify-between px-4 py-2.5">
                             <h1 className="hidden xl:block text-xl font-bold">Available Deliveries</h1>
                             <div className="flex items-center justify-between gap-2">
@@ -78,7 +79,7 @@ const DashboardPage:NextPage = () => {
                     </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle={false} />
-                <ResizablePanel collapsible={false} defaultSize={60} minSize={60}>
+                <ResizablePanel collapsible={false} defaultSize={70} minSize={70}>
                     {selectedDelivery && (
                         <DeliveryDisplay
                             selectedDelivery={selectedDelivery}

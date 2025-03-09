@@ -40,12 +40,12 @@ export function DriversProvider(
         fallbackData: props.fallbackDrivers
     })
 
+    console.log({selectedDriver})
+
     useEffect(() => {
         if (Array.isArray(driversData)) {
             setDrivers(driversData as any);
         }
-
-
         if (!hasExistingDriverSelected && drivers?.length > 0) {
             setSelectedDriver(drivers[0]);
         } else if (hasExistingDriverSelected && selectedDriver) {

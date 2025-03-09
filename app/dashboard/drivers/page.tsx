@@ -70,9 +70,11 @@ const DashboardPage:NextPage = () => {
                 </ResizablePanel>
                 <ResizableHandle withHandle={false} />
                 <ResizablePanel  collapsible={false} defaultSize={70} minSize={70}>
-                    <DriverDisplay
-                        selectedDriver={selectedDriver}
-                    />
+                    {selectedDriver !== null && (
+                        <DriverDisplay
+                            selectedDriver={selectedDriver}
+                        />
+                    )}
                 </ResizablePanel>
             </ResizablePanelGroup>
             <AddDriverModal open={openModal} setOpen={setOpenModal} />

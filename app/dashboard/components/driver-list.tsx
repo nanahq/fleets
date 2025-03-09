@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Building, HandCoins, Scale, User, } from "lucide-react";
+import {Building, Circle, HandCoins, MapPin, Phone, Scale, Truck, User,} from "lucide-react";
 import {DriverI} from "@nanahq/sticky";
+import {Badge} from "@/components/ui/badge";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 
 interface DriverListProps {
@@ -10,6 +12,83 @@ interface DriverListProps {
     setSelectedDriver: (dricer: DriverI) => void;
 }
 
+const DriverCard = ({
+                        driver,
+                        isSelected,
+                        onSelect
+}: {
+    driver: DriverI;
+    isSelected: boolean;
+    onSelect: (driver: DriverI) => void;
+}) => {
+    const statusColor = driver.status === 'ONLINE'
+        ? 'bg-green-100 text-green-800'
+        : 'bg-gray-100 text-gray-800';
+
+    return (
+        <button
+            data-testid="DriverList.Card"
+            className={cn(
+                "w-full flex items-center gap-4 p-4 rounded-xl border",
+                "bg-white hover:bg-gray-50 transition-all hover:shadow-sm",
+                isSelected && "border-slate-600 bg-muted shadow-sm"
+            )}
+            onClick={() => onSelect(driver)}
+        >
+            <div className="flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+          <span className="text-lg font-medium text-gray-600">
+            {driver.firstName[0]}{driver.lastName[0]}
+          </span>
+                </div>
+            </div>
+
+            {/* Driver Info */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-900 truncate">
+                        {driver.firstName} {driver.lastName}
+                    </h3>
+                    <Badge variant="secondary" className={cn(statusColor)}>
+                        {driver.status}
+                    </Badge>
+                </div>
+
+                <div className="mt-1 space-y-1">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Phone size={14} />
+                        <span className="truncate">{driver.phone}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Truck size={14} />
+                        <span>{driver.totalTrips} trips completed</span>
+                    </div>
+
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <MapPin size={14} />
+                                    <span className="truncate">{driver.state}</span>
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Lat: {driver.location.coordinates[0]}</p>
+                                <p>Long: {driver.location.coordinates[1]}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            </div>
+            {driver.available && (
+                <div className="flex-shrink-0">
+                    <Circle className="w-5 h-5 text-green-500" />
+                </div>
+            )}
+        </button>
+    );
+};
 export function DriverList({
                                 items,
                                 setSelectedDriver,
@@ -21,30 +100,8 @@ export function DriverList({
         <ScrollArea className="h-screen pb-40">
             <div className="flex flex-col gap-2 p-4 ">
                 {sortedItems.map((item) => {
-                    const IconComponent = <User className="h-5 w-5" />
-
                     return (
-                        <button
-                            data-testid="DealList.Card"
-                            key={item._id}
-                            className={cn(
-                                "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-                                selectedDriver?._id === item?._id && "bg-muted"
-                            )}
-                            onClick={() => {
-                                setSelectedDriver(item);
-                            }}
-                        >
-                            <div className="flex w-full items-center gap-3">
-                                {IconComponent}
-                                <div className="flex flex-col w-full items-baseline">
-                                    <p className="font-semibold">{item.firstName} {item.lastName}</p>
-                                    <p className="text-xs font-medium">
-                                        {item.phone}
-                                    </p>
-                                </div>
-                            </div>
-                        </button>
+                        <DriverCard driver={item} isSelected={item._id === selectedDriver?._id} onSelect={setSelectedDriver} />
                     );
                 })}
             </div>

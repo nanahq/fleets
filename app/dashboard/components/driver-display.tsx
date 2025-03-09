@@ -1,194 +1,183 @@
-import {Building, Ellipsis, Mail, Phone, User, UserPlus, Network, Check, Pin, MapPin} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React, {  useState } from "react";
-import {ChartBar, ChartArea} from 'lucide-react'
+import React, { useState } from "react";
+import { DriverI } from "@nanahq/sticky";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+    Building,
+    Phone,
+    Mail,
+    User,
+    Check,
+    Network,
+    MapPin,
+    Truck,
+    ChartArea
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn, getInitials } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import {DriverI} from "@nanahq/sticky";
-import {getInitials} from "@/lib/utils";
-import {DeleteDriverButton} from "@/app/dashboard/components/delete-driver-modal";
-import {useProfile} from "@/contexts/profile-context";
-import {DriverLocationMap} from "@/app/dashboard/components/driver-location-map";
-import {DriverStatModal} from "@/app/dashboard/components/driver-stat-modal";
+import { useProfile } from "@/contexts/profile-context";
+import { DriverLocationMap } from "@/app/dashboard/components/driver-location-map";
+import { DriverStatModal } from "@/app/dashboard/components/driver-stat-modal";
+import { DeleteDriverButton } from "@/app/dashboard/components/delete-driver-modal";
 
+export const DriverDisplay: React.FC<{ selectedDriver: DriverI }> = ({ selectedDriver }) => {
+    const [deleteDriverModalOpen, setDeleteDriverModalOpen] = useState(false);
+    const { profile } = useProfile();
 
+    const getStatusInfo = () => {
+        return selectedDriver?.status === 'ONLINE'
+            ? { label: "Online", color: "bg-green-100 text-green-600" }
+            : { label: "Offline", color: "bg-gray-100 text-gray-600" };
+    };
 
-export const DriverDisplay: React.FC<{
-    selectedDriver: DriverI;
-}> = ({ selectedDriver }) => {
-    const [deleteDriverModalOpen, setDeleteDriverModalOpen] = useState(false)
-    const {profile} = useProfile()
+    const statusInfo = getStatusInfo();
+
     return (
-        <>
-            <ScrollArea className="flex h-screen flex-col">
-                {selectedDriver ? (
-                    <div className="flex flex-col flex-1 p-4">
-                        <div className="flex flex-row w-full justify-between items-center">
-                            <div className="flex items-center justify-start space-x-4">
-                                <Avatar>
-                                    <AvatarFallback className="border-primary border-[0.5px] bg-transparent">
-                                        {getInitials(`${selectedDriver?.firstName} ${selectedDriver?.lastName}`)}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <p className="text-2xl font-medium leading-none">
-                                        {selectedDriver?.firstName} {selectedDriver?.lastName}
-                                    </p>
-                                </div>
-
-                            </div>
-                            <div className="flex flex-row">
-                                <div>
-                                    <DriverStatModal driverId={selectedDriver._id} driverName={selectedDriver.firstName}>
-                                        <Button variant="ghost">
-                                            View driver performance
-                                            <ChartArea className="w-5 h-5 text-black"/>
-                                        </Button>
-                                    </DriverStatModal>
-
-                                </div>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            <Ellipsis className="h-4 w-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem>
-                                            Edit contact
-                                        </DropdownMenuItem>
-                                        <DeleteDriverButton driver={selectedDriver} open={deleteDriverModalOpen} setOpen={setDeleteDriverModalOpen} />
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-
-                        </div>
-
-                        <div className="flex flex-col gap-3 py-5">
-                            <div className="flex gap-3">
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">
-                                            Organization
-                                        </CardTitle>
-                                        <Building className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-base">
-                                            {profile?.organization.name}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Type</CardTitle>
-                                        <User className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-base">
-                                            {selectedDriver?.type
-                                                    ?.toLowerCase()[0]
-                                                    .toUpperCase() +
-                                                selectedDriver?.type?.toLocaleLowerCase().slice(1)}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                            <div className="flex gap-3">
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Email</CardTitle>
-                                        <Mail className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        {selectedDriver?.email ? (
-                                            selectedDriver?.email?.split(",").filter(mail => Boolean(mail)).map((email) => (
-                                                <p className="text-base flex items-center justify-start" key={email}>
-                                                    {email}
-                                                </p>
-                                            ))
-                                        ) : (
-                                            <Button
-                                                variant="link"
-                                                className="h-auto p-0 text-base text-muted-foreground hover:underline"
-                                                onClick={() => setDeleteDriverModalOpen(true)}
-                                            >
-                                                Add email
-                                            </Button>
-                                        )}
-
-                                    </CardContent>
-                                </Card>
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Phone</CardTitle>
-                                        <Phone className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        {selectedDriver?.phone ? (
-                                            <p className="text-base flex items-center justify-start">
-                                                {selectedDriver.phone}
-                                            </p>
-                                        ) : (
-                                            <Button
-                                                variant="link"
-                                                className="h-auto p-0 text-base text-muted-foreground hover:underline"
-                                                onClick={() => setDeleteDriverModalOpen(true)}
-                                            >
-                                                Add phone number
-                                            </Button>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Availability</CardTitle>
-                                        <Check className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-
-                                            <p className="text-base flex items-center justify-start">
-                                                {selectedDriver.available ? 'Available to take orders' : 'Not available'}
-                                            </p>
-                                    </CardContent>
-                                </Card>
-                                <Card className="flex-1">
-                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <CardTitle className="text-sm font-medium">Status</CardTitle>
-                                        <Network className="h-5 w-5" color="grey" />
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-base flex items-center justify-start">
-                                            {selectedDriver.status === 'ONLINE' ? 'Driver is online' : 'Driver is offline'}
-                                        </p>
-                                    </CardContent>
-
-                                </Card>
-                            </div>
-                        </div>
-                       <Card>
-                           <CardContent>
-                               <CardHeader className="flex flex-row space-x-2 items-center">
-                                       <CardTitle className="text-sm font-medium">Driver current location</CardTitle>
-                                       <MapPin className="h-4 w-4" color="grey" />
-                               </CardHeader>
-                               <DriverLocationMap driver={selectedDriver} />
-                           </CardContent>
-                       </Card>
+        <ScrollArea className="h-screen overflow-y-auto pb-20 px-6 pt-5">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                    <Avatar className="h-12 w-12">
+                        <AvatarFallback className="bg-gray-100 text-gray-600">
+                            {getInitials(`${selectedDriver?.firstName} ${selectedDriver?.lastName}`)}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-800">
+                            {selectedDriver?.firstName} {selectedDriver?.lastName}
+                        </h1>
+                        <p className="text-gray-500 text-sm">
+                            Joined {new Date(selectedDriver?.createdAt).toLocaleDateString()}
+                        </p>
                     </div>
-                ) : (
-                    <div className="h-[90vh] flex items-center justify-center">
-                        <div className="flex flex-col gap-4 items-center">
-                            <UserPlus className="w-10 h-10" />
-                            <p className="text-2xl text-center">Create a contact to get started</p>
+                </div>
+                <Badge className={cn("px-4 py-2 text-sm font-medium", statusInfo.color)}>
+                    {statusInfo.label}
+                </Badge>
+            </div>
+
+            {/* Location Map */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-md mb-6">
+                <div className="h-80">
+                    <DriverLocationMap driver={selectedDriver} />
+                </div>
+            </div>
+
+            {/* Driver Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white rounded-lg shadow-sm p-4 flex items-center space-x-4">
+                    <div className="p-3 bg-blue-50 rounded-full">
+                        <Truck className="w-6 h-6 text-blue-500" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Total Trips</p>
+                        <p className="text-lg font-bold">{selectedDriver?.totalTrips}</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm p-4 flex items-center space-x-4">
+                    <div className="p-3 bg-purple-50 rounded-full">
+                        <Check className="w-6 h-6 text-purple-500" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Availability</p>
+                        <p className="text-lg font-bold">
+                            {selectedDriver?.available ? "Available" : "Not Available"}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm p-4 flex items-center space-x-4">
+                    <div className="p-3 bg-amber-50 rounded-full">
+                        <MapPin className="w-6 h-6 text-amber-500" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">State</p>
+                        <p className="text-lg font-bold">{selectedDriver?.state}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div className="flex items-center mb-4">
+                    <User className="w-5 h-5 text-gray-500 mr-2" />
+                    <h2 className="text-lg font-semibold">Contact Information</h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-3">
+                        <Phone className="w-5 h-5 text-gray-500" />
+                        <div>
+                            <p className="text-sm text-gray-500">Phone</p>
+                            <p className="font-medium">
+                                {selectedDriver?.phone || "Not provided"}
+                            </p>
                         </div>
                     </div>
-                )}
-            </ScrollArea>
 
-        </>
+                    <div className="flex items-center space-x-3">
+                        <Mail className="w-5 h-5 text-gray-500" />
+                        <div>
+                            <p className="text-sm text-gray-500">Email</p>
+                            <p className="font-medium">
+                                {selectedDriver?.email || "Not provided"}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Organization Details */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div className="flex items-center mb-4">
+                    <Building className="w-5 h-5 text-gray-500 mr-2" />
+                    <h2 className="text-lg font-semibold">Organization Details</h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-sm text-gray-500">Organization</p>
+                        <p className="font-medium">{profile?.organization?.name}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Driver Type</p>
+                        <p className="font-medium">
+                            {selectedDriver?.type?.charAt(0).toUpperCase() +
+                                selectedDriver?.type?.slice(1).toLowerCase()}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-4 mb-6">
+                <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
+                    <Phone className="mr-2 h-4 w-4" /> Contact Driver
+                </Button>
+                <DriverStatModal driverId={selectedDriver._id} driverName={selectedDriver.firstName}>
+                    <Button variant="outline" className="flex-1">
+                        <ChartArea className="mr-2 h-4 w-4" /> View Performance
+                    </Button>
+                </DriverStatModal>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="flex-1">
+                            <Network className="mr-2 h-4 w-4" /> More Actions
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Edit Contact</DropdownMenuItem>
+                        <DeleteDriverButton
+                            driver={selectedDriver}
+                            open={deleteDriverModalOpen}
+                            setOpen={setDeleteDriverModalOpen}
+                        />
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </ScrollArea>
     );
-}
+};

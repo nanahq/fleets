@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CreatAccountLayout (props: PropsWithChildren<{}>) {
     return (
-            <div className=" min-h-screen">
+            <div className="bg-white rounded-lg min-h-screen">
                 {props.children}
             </div>
     )

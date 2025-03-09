@@ -2,25 +2,21 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { useTheme } from "next-themes";
 import AccountSettings from "./account-settings";
-import {User} from "lucide-react";
+import { Menu} from "lucide-react";
+import {useProfile} from "@/contexts/profile-context";
 
-interface AccountSwitcherProps {
-    isCollapsed: boolean;
-}
 
-export function AccountSwitcher({ isCollapsed }: AccountSwitcherProps) {
+export function AccountSwitcher() {
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const {profile} = useProfile()
 
     return (
         <>
 
-            <div className="flex items-center justify-center rounded-lg p-1 hover:bg-muted hover:border-primary hover:border-[1px] hover:cursor-pointer focus-visible:ring-0" onClick={() => setSettingsOpen(true)}>
-                <img
-                    src="/image/fleet-blue.png"
-                    className="h-7 w-7 rounded-lg object-contain"
-                />
+            <div className="flex  w-full bg-nana-200 text-white flex-row items-center rounded cursor-pointer p-1.5 mt-3" onClick={() => setSettingsOpen(true)}>
+                <Menu className="text-white mr-1 p-0" size={18} />
+                <span className=" text-sm">{profile?.organization.name}</span>
             </div>
             <AccountSettings open={settingsOpen} setOpen={setSettingsOpen} />
         </>

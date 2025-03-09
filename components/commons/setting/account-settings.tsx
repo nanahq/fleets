@@ -46,9 +46,7 @@ export default function AccountSettings({ open, setOpen, tab }: { open: boolean;
 
 
     if(!profile?.organization) {
-        return <div>
-            <Icons.spinner />
-        </div>
+        return <div />
     }
     const handleCopy = async () => {
         const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invite?orgId=${profile?.organization.inviteLink}`
