@@ -101,7 +101,7 @@ export function DriverList({
             <div className="flex flex-col gap-2 p-4 ">
                 {sortedItems.map((item) => {
                     return (
-                        <DriverCard driver={item} isSelected={item._id === selectedDriver?._id} onSelect={setSelectedDriver} />
+                        <DriverCard key={item._id} driver={item} isSelected={item._id === selectedDriver?._id} onSelect={setSelectedDriver} />
                     );
                 })}
             </div>

@@ -56,7 +56,6 @@ export function LayoutComponent({
                             <Separator className="h-0.5 w-full bg-slate-200 -mx-2 my-1.5" />
                         </div>
                         <NavBar
-                            isCollapsed={true}
                             links={[
                                 {
                                     title: "Stats",

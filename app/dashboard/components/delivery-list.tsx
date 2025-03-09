@@ -147,7 +147,7 @@ export function DeliveryList({
                 {/*</div>*/}
                 {sortedItems.map((item) => {
                     return (
-                        <DeliveryListItem item={item}
+                        <DeliveryListItem key={item._id} item={item}
                                           selectedDelivery={selectedDelivery as any}
                                           setSelectedDelivery={setSelectedDelivery}
                         />

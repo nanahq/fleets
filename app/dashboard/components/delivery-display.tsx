@@ -1,27 +1,16 @@
-import React, { useMemo, useState } from "react";
-import { DeliveryLocationMap } from "@/app/dashboard/components/delivery-location-map";
-import { DeliveryI, DriverI } from "@nanahq/sticky";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-    BadgeDollarSign,
-    Clock,
-    MapPin,
-    Package,
-    Phone,
-    Truck,
-    User,
-    Calendar,
-    Mail,
-    Navigation
-} from "lucide-react";
-import { useDrivers } from "@/contexts/drivers-context";
-import { getInitials, cn } from "@/lib/utils";
+import React, {useMemo, useState} from "react";
+import {DeliveryLocationMap} from "@/app/dashboard/components/delivery-location-map";
+import {DeliveryI, DriverI, OrderStatus} from "@nanahq/sticky";
+import {Avatar, AvatarFallback} from "@/components/ui/avatar";
+import {BadgeDollarSign, Clock, MapPin, Navigation, Package, Phone, Truck, User} from "lucide-react";
+import {useDrivers} from "@/contexts/drivers-context";
+import {cn, getInitials} from "@/lib/utils";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { NumericFormat } from "react-number-format";
-import { AssignDeliveryModal } from "@/app/dashboard/components/assing-delivery-to-driver-modal";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {NumericFormat} from "react-number-format";
+import {AssignDeliveryModal} from "@/app/dashboard/components/assing-delivery-to-driver-modal";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 
 export const DeliveryDisplay: React.FC<{ selectedDelivery: DeliveryI }> = (props) => {
     const [open, setOpen] = useState(false);
@@ -37,11 +26,11 @@ export const DeliveryDisplay: React.FC<{ selectedDelivery: DeliveryI }> = (props
         const status = props.selectedDelivery?.status || "pending";
 
         switch (status) {
-            case "completed":
+            case OrderStatus.FULFILLED:
                 return { label: "Delivered", color: "bg-green-100 text-green-600" };
-            case "assigned":
+            case OrderStatus.COURIER_PICKUP:
                 return { label: "Assigned", color: "bg-purple-100 text-purple-600" };
-            case "in-progress":
+            case OrderStatus.IN_ROUTE:
                 return { label: "In Transit", color: "bg-blue-100 text-blue-600" };
             default:
                 return { label: "Pending", color: "bg-yellow-100 text-yellow-600" };
