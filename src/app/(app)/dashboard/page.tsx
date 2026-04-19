@@ -77,7 +77,7 @@ export default function DashboardPage() {
             <CardTitle>Today's End-of-Day ({eod.date})</CardTitle>
             <span className="text-xs text-muted">
               {eod.revenue_model === 'FULL_SERVICE' ? 'Full service' : 'Bike only'} ·{' '}
-              {Number(eod.commission_rate) * 100}% commission
+              ₦{Number(eod.commission_rate)}/km commission
             </span>
           </CardHeader>
           <div className="grid grid-cols-3 gap-3 mb-4">
