@@ -69,9 +69,6 @@ export default function SettingsPage() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted">Revenue model</span>
-              <Badge variant="blue">
-                {me.revenue_model === 'FULL_SERVICE' ? 'Full Service' : 'Bike Only'}
-              </Badge>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted">Commission rate</span>
