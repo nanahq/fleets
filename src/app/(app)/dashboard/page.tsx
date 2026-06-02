@@ -1,31 +1,84 @@
 'use client';
 
 import { useState } from 'react';
-import { useAnalytics, useEod } from '@/hooks/useAnalytics';
+import { useEarnings } from '@/hooks/useAnalytics';
 import { StatCard } from '@/components/ui/stat-card';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fmtCurrency, fmtKm, fmt } from '@/lib/utils';
-import type { AnalyticsWindow } from '@/types';
+import type { EarningsWindow, BikeEarnings } from '@/types';
 
-const WINDOWS: { label: string; value: AnalyticsWindow }[] = [
+const WINDOWS: { label: string; value: EarningsWindow }[] = [
   { label: 'Today', value: 1 },
   { label: '7 days', value: 7 },
   { label: '30 days', value: 30 },
 ];
 
-export default function DashboardPage() {
-  const [window, setWindow] = useState<AnalyticsWindow>(7);
-  const { data: analytics, isLoading: loadingAnalytics } = useAnalytics(window);
-  const { data: eod } = useEod();
+function CostRow({ label, value, accent }: { label: string; value: number; accent?: 'red' | 'green' | 'muted' }) {
+  const colour =
+    accent === 'red' ? 'text-red-400' :
+    accent === 'green' ? 'text-lime' :
+    'text-light';
+  return (
+    <div className="flex items-center justify-between text-sm py-1.5 border-b border-border last:border-0">
+      <span className="text-muted">{label}</span>
+      <span className={`font-medium ${colour}`}>{fmtCurrency(value)}</span>
+    </div>
+  );
+}
 
-  const summary = analytics?.summary;
+function BikeRow({ bike }: { bike: BikeEarnings }) {
+  const [open, setOpen] = useState(false);
+  const isProfit = bike.earnings.netEarnings >= 0;
+
+  return (
+    <div>
+      <button
+        className="w-full text-left flex items-center justify-between py-3 px-1 border-b border-border hover:opacity-80 transition-opacity"
+        onClick={() => setOpen(!open)}
+      >
+        <div>
+          <p className="font-mono text-sm font-medium text-light">{bike.plate_number}</p>
+          <p className="text-xs text-muted mt-0.5">{bike.deliveries} deliveries · {fmtKm(bike.distance_km)}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-semibold text-lime">{fmtCurrency(bike.earnings.deliveryFeeGenerated)}</p>
+          <p className={`text-xs font-medium ${isProfit ? 'text-lime' : 'text-red-400'}`}>
+            {isProfit ? '+' : ''}{fmtCurrency(bike.earnings.netEarnings)} net
+          </p>
+        </div>
+      </button>
+
+      {open && (
+        <div className="bg-surface rounded-xl p-4 mt-1 mb-2 space-y-2 text-sm">
+          <CostRow label="Delivery Fee Collected" value={bike.earnings.deliveryFeeGenerated} accent="green" />
+          <CostRow label="Daily Base Pay" value={bike.earnings.costs.dailyBasePay} accent="red" />
+          <CostRow label="Fuel Cost" value={bike.earnings.costs.fuel} accent="red" />
+          <CostRow label="Maintenance" value={bike.earnings.costs.maintenance} accent="red" />
+          <CostRow label="Platform Commission" value={bike.earnings.costs.commission} accent="red" />
+          <div className="flex items-center justify-between pt-2 font-semibold text-sm">
+            <span className="text-muted">Net Earnings</span>
+            <span className={isProfit ? 'text-lime' : 'text-red-400'}>
+              {fmtCurrency(bike.earnings.netEarnings)} ({bike.earnings.marginPct})
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const [window, setWindow] = useState<EarningsWindow>(1);
+  const { data: earnings, isLoading } = useEarnings(window);
+
+  const summary = earnings?.summary;
 
   return (
     <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
-      {/* Header */}
+      {/* Header + window selector */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-xl font-semibold text-light">Analytics</h1>
+        <h1 className="text-xl font-semibold text-light">Earnings</h1>
         <div className="flex gap-2">
           {WINDOWS.map((w) => (
             <Button
@@ -41,119 +94,75 @@ export default function DashboardPage() {
       </div>
 
       {/* Summary stats */}
-      {loadingAnalytics ? (
+      {isLoading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-24 rounded-xl bg-surface animate-pulse" />
           ))}
         </div>
       ) : summary ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <StatCard label="Deliveries" value={summary.deliveries} accent="light" />
-          <StatCard label="Distance" value={fmtKm(summary.distance_km_total)} accent="purple" />
-          <StatCard label="Revenue" value={fmtCurrency(summary.revenue_total)} accent="lime" />
-          <StatCard
-            label="Avg km / delivery"
-            value={fmtKm(summary.avg_km_per_delivery)}
-            accent="light"
-          />
-          <StatCard
-            label="Deliveries / km"
-            value={fmt(summary.avg_deliveries_per_km)}
-            accent="light"
-          />
-          <StatCard
-            label="Revenue / km"
-            value={fmtCurrency(summary.avg_revenue_per_km)}
-            accent="lime"
-          />
-        </div>
-      ) : null}
-
-      {/* EOD Today */}
-      {eod && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Today's End-of-Day ({eod.date})</CardTitle>
-            <span className="text-xs text-muted">
-              {eod.revenue_model === 'FULL_SERVICE' ? 'Full service' : 'Bike only'} ·{' '}
-              ₦{Number(eod.commission_rate)}/km commission
-            </span>
-          </CardHeader>
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div>
-              <p className="text-xs text-muted mb-0.5">Deliveries</p>
-              <p className="text-lg font-semibold">{eod.deliveries}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted mb-0.5">Distance</p>
-              <p className="text-lg font-semibold text-purple">{fmtKm(eod.distance_km_total)}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted mb-0.5">Owed</p>
-              <p className="text-lg font-semibold text-lime">{fmtCurrency(eod.total_compensation)}</p>
-            </div>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <StatCard label="Deliveries" value={summary.deliveries} accent="light" />
+            <StatCard label="Distance" value={fmtKm(summary.distance_km)} accent="purple" />
+            <StatCard label="Delivery Fees" value={fmtCurrency(summary.earnings.deliveryFeeGenerated)} accent="lime" />
+            <StatCard label="Total Costs" value={fmtCurrency(summary.earnings.costs.total)} accent="light" />
+            <StatCard label="Net Earnings" value={fmtCurrency(summary.earnings.netEarnings)} accent={summary.earnings.netEarnings >= 0 ? 'lime' : 'light'} />
+            <StatCard label="Margin" value={summary.earnings.marginPct} accent="light" />
           </div>
 
-          {/* Per-bike table */}
-          {eod.per_bike.length > 0 && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border text-muted text-xs">
-                    <th className="text-left pb-2 font-medium">Plate</th>
-                    <th className="text-right pb-2 font-medium">Deliveries</th>
-                    <th className="text-right pb-2 font-medium">Distance</th>
-                    <th className="text-right pb-2 font-medium">Revenue</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {eod.per_bike.map((b) => (
-                    <tr key={b.bike_id}>
-                      <td className="py-2 font-mono text-xs">{b.plate_number}</td>
-                      <td className="py-2 text-right">{b.deliveries}</td>
-                      <td className="py-2 text-right text-purple">{fmtKm(b.distance_km)}</td>
-                      <td className="py-2 text-right text-lime">{fmtCurrency(b.revenue)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Cost breakdown */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Cost Breakdown</CardTitle>
+            </CardHeader>
+            <CostRow label="Delivery Fees Collected" value={summary.earnings.deliveryFeeGenerated} accent="green" />
+            <CostRow label="Daily Base Pay (all bikes)" value={summary.earnings.costs.dailyBasePay} accent="red" />
+            <CostRow label="Fuel" value={summary.earnings.costs.fuel} accent="red" />
+            <CostRow label="Maintenance" value={summary.earnings.costs.maintenance} accent="red" />
+            <CostRow label="Platform Commission" value={summary.earnings.costs.commission} accent="red" />
+            <div className="flex items-center justify-between pt-3 font-semibold">
+              <span className="text-muted text-sm">Net Earnings</span>
+              <span className={`text-base ${summary.earnings.netEarnings >= 0 ? 'text-lime' : 'text-red-400'}`}>
+                {fmtCurrency(summary.earnings.netEarnings)}
+              </span>
             </div>
-          )}
+          </Card>
+        </>
+      ) : null}
+
+      {/* Per-bike breakdown */}
+      {earnings && earnings.bikes.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Per Bike</CardTitle>
+            <span className="text-xs text-muted">Tap a bike to see cost breakdown</span>
+          </CardHeader>
+          <div>
+            {earnings.bikes.map((bike) => (
+              <BikeRow key={bike.bike_id} bike={bike} />
+            ))}
+          </div>
         </Card>
       )}
 
-      {/* Per-bike analytics */}
-      {analytics && analytics.bikes.length > 0 && (
+      {/* Config */}
+      {earnings?.config && (
         <Card>
-          <CardHeader>
-            <CardTitle>Per-bike ({analytics.window_days}d)</CardTitle>
-          </CardHeader>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-muted text-xs">
-                  <th className="text-left pb-2 font-medium">Plate</th>
-                  <th className="text-right pb-2 font-medium">Deliveries</th>
-                  <th className="text-right pb-2 font-medium">Distance</th>
-                  <th className="text-right pb-2 font-medium">Avg km</th>
-                  <th className="text-right pb-2 font-medium">Revenue</th>
-                  <th className="text-right pb-2 font-medium">₦/km</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {analytics.bikes.map((b) => (
-                  <tr key={b.bike_id}>
-                    <td className="py-2 font-mono text-xs">{b.plate_number}</td>
-                    <td className="py-2 text-right">{b.deliveries}</td>
-                    <td className="py-2 text-right text-purple">{fmtKm(b.distance_km_total)}</td>
-                    <td className="py-2 text-right text-muted">{fmtKm(b.avg_km_per_delivery)}</td>
-                    <td className="py-2 text-right text-lime">{fmtCurrency(b.revenue_total)}</td>
-                    <td className="py-2 text-right text-muted">{fmtCurrency(b.avg_revenue_per_km)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <CardHeader><CardTitle>Earnings Config</CardTitle></CardHeader>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+            {[
+              { label: 'Daily Base Pay', value: fmtCurrency(earnings.config.daily_base_pay) },
+              { label: 'Commission', value: `${(earnings.config.commission_rate * 100).toFixed(0)}%` },
+              { label: 'Fuel Price', value: `₦${earnings.config.fuel_price_per_litre}/L` },
+              { label: 'Fuel Efficiency', value: `${earnings.config.fuel_efficiency} km/L` },
+              { label: 'Maintenance', value: `₦${earnings.config.maintenance_cost_per_km}/km` },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-bg rounded-lg p-3">
+                <p className="text-xs text-muted mb-0.5">{label}</p>
+                <p className="font-semibold text-light">{value}</p>
+              </div>
+            ))}
           </div>
         </Card>
       )}
