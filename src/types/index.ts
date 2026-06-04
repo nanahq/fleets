@@ -64,6 +64,26 @@ export interface HeatmapPoint {
   lng: number;
 }
 
+// ── Daily Earnings (computed by nightly cron) ─────────────────────────────────
+
+export interface FleetDailyEarning {
+  id: string;
+  fleet_id: string;
+  date: string;
+  total_deliveries: number;
+  total_distance_km: number;
+  total_delivery_fee: number;
+  active_driver_count: number;
+  cost_daily_base_pay: number;
+  cost_commission: number;
+  cost_fuel: number;
+  cost_maintenance: number;
+  total_costs: number;
+  net_earnings: number;
+  margin_pct: number;
+  computed_at: string;
+}
+
 // ── Bikes ─────────────────────────────────────────────────────────────────────
 
 export interface FleetBike {

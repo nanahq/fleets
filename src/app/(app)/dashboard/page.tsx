@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useEarnings } from '@/hooks/useAnalytics';
+import { useEarnings, useDailyEarnings } from '@/hooks/useAnalytics';
 import { StatCard } from '@/components/ui/stat-card';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { fmtCurrency, fmtKm, fmt } from '@/lib/utils';
-import type { EarningsWindow, BikeEarnings } from '@/types';
+import type { EarningsWindow, BikeEarnings, FleetDailyEarning } from '@/types';
 
 const WINDOWS: { label: string; value: EarningsWindow }[] = [
   { label: 'Today', value: 1 },
@@ -23,6 +23,55 @@ function CostRow({ label, value, accent }: { label: string; value: number; accen
     <div className="flex items-center justify-between text-sm py-1.5 border-b border-border last:border-0">
       <span className="text-muted">{label}</span>
       <span className={`font-medium ${colour}`}>{fmtCurrency(value)}</span>
+    </div>
+  );
+}
+
+function DailyRow({ row }: { row: FleetDailyEarning }) {
+  const [open, setOpen] = useState(false);
+  const isProfit = Number(row.net_earnings) >= 0;
+  const date = new Date(row.date).toLocaleDateString('en-NG', {
+    weekday: 'short', month: 'short', day: 'numeric', timeZone: 'Africa/Lagos',
+  });
+
+  return (
+    <div>
+      <button
+        className="w-full text-left flex items-center justify-between py-3 px-1 border-b border-border hover:opacity-80 transition-opacity"
+        onClick={() => setOpen(!open)}
+      >
+        <div>
+          <p className="text-sm font-medium text-light">{date}</p>
+          <p className="text-xs text-muted mt-0.5">
+            {row.total_deliveries} deliveries · {fmtKm(Number(row.total_distance_km))} · {row.active_driver_count} rider{row.active_driver_count !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-semibold text-lime">{fmtCurrency(Number(row.total_delivery_fee))}</p>
+          <p className={`text-xs font-medium ${isProfit ? 'text-lime' : 'text-red-400'}`}>
+            {isProfit ? '+' : ''}{fmtCurrency(Number(row.net_earnings))} net
+          </p>
+        </div>
+      </button>
+
+      {open && (
+        <div className="bg-surface rounded-xl p-4 mt-1 mb-2 space-y-2 text-sm">
+          <CostRow label="Delivery Fees" value={Number(row.total_delivery_fee)} accent="green" />
+          <CostRow label="Daily Base Pay" value={Number(row.cost_daily_base_pay)} accent="red" />
+          <CostRow label="Fuel" value={Number(row.cost_fuel)} accent="red" />
+          <CostRow label="Maintenance" value={Number(row.cost_maintenance)} accent="red" />
+          <CostRow label="Platform Commission" value={Number(row.cost_commission)} accent="red" />
+          <div className="flex items-center justify-between pt-2 font-semibold">
+            <span className="text-muted">Net Earnings</span>
+            <span className={isProfit ? 'text-lime' : 'text-red-400'}>
+              {fmtCurrency(Number(row.net_earnings))} ({fmt(Number(row.margin_pct))}%)
+            </span>
+          </div>
+          <p className="text-xs text-muted pt-1">
+            Computed {new Date(row.computed_at).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'short', timeStyle: 'short' })}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -70,7 +119,9 @@ function BikeRow({ bike }: { bike: BikeEarnings }) {
 
 export default function DashboardPage() {
   const [window, setWindow] = useState<EarningsWindow>(1);
+  const [historyDays, setHistoryDays] = useState<1 | 7 | 30>(7);
   const { data: earnings, isLoading } = useEarnings(window);
+  const { data: dailyHistory = [], isLoading: historyLoading } = useDailyEarnings(historyDays);
 
   const summary = earnings?.summary;
 
@@ -145,6 +196,44 @@ export default function DashboardPage() {
           </div>
         </Card>
       )}
+
+      {/* Daily earnings history */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between w-full">
+            <CardTitle>Daily Earnings History</CardTitle>
+            <div className="flex gap-1.5">
+              {([1, 7, 30] as const).map((d) => (
+                <Button
+                  key={d}
+                  size="sm"
+                  variant={historyDays === d ? 'default' : 'outline'}
+                  onClick={() => setHistoryDays(d)}
+                >
+                  {d === 1 ? 'Today' : `${d}d`}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </CardHeader>
+        {historyLoading ? (
+          <div className="space-y-2 p-1">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-12 rounded-lg bg-surface animate-pulse" />
+            ))}
+          </div>
+        ) : dailyHistory.length === 0 ? (
+          <p className="text-sm text-muted text-center py-8">
+            No computed earnings yet — data appears after the nightly run.
+          </p>
+        ) : (
+          <div>
+            {[...dailyHistory].reverse().map((row) => (
+              <DailyRow key={row.id} row={row} />
+            ))}
+          </div>
+        )}
+      </Card>
 
       {/* Config */}
       {earnings?.config && (
